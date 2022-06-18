@@ -1,0 +1,15 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.0.8",
+    "ws": "^8.8.0"
+  },
+  "scripts": {
+    "backend":"node src/index.js",
+    "nuvem":"node src/nuvem.js"
+  }
+
+}
