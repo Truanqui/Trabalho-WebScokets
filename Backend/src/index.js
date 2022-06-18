@@ -64,6 +64,6 @@ server.on("listening", async () => {
   });
 });
 
-server.listen(8080, () => {
+server.listen(3333, () => {
   console.log("servidor conectou");
 });

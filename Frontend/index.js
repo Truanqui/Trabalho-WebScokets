@@ -1,5 +1,4 @@
 //fazendo a conexao com o backend
-const ws = new WebSocket("ws://localhost:8080");
 const map = L.map("map").setView([51.505, -0.09], 13);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -25,10 +24,14 @@ ws.onopen = function () {
       longitude: longitude,
       menssagem: menssagem,
     };
-    ws.send(JSON.stringify(objeto));
+   
     //aparece o marcardor onde esta clicado no mapa, cria um pop up onde a pessoa deixar o comentario e e botao de confirmar do google e tem a possibilidade de clicar em outro local e colocar um marcador
     L.marker([latitude, longitude], { title: menssagem }).addTo(map);
+
+    ws.send(JSON.stringify(objeto));
+    return;
   });
+  return;
 };
 ws.onerror = function (e) {
   console.log(e);
