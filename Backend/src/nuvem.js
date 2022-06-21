@@ -1,6 +1,6 @@
 const http = require("http");
 const server = http.createServer();
-const { WebSocketServer } = require("ws");
+const { WebSocketServer, WebSocket } = require("ws");
 const sqlite3 = require("sqlite3");
 const wss = new WebSocketServer({ server });
 const db = sqlite3.verbose().Database;
@@ -8,7 +8,6 @@ const banconuvem = new db("./src/DataBase/BancoNuvem.db");
 
 //Conexao da nuvem
 wss.on("connection", (socket, request) => {
-
   socket.on("message", async (e) => {
     const menssagem = e.toString();
     const objeto = JSON.parse(menssagem);
@@ -26,6 +25,7 @@ wss.on("connection", (socket, request) => {
     });
   });
 });
+//criando tabela
 server.on("listening", async () => {
   await new Promise((resolve, reject) => {
     banconuvem.exec(
@@ -46,6 +46,28 @@ server.on("listening", async () => {
         }
       }
     );
+  });
+});
+//esta criando uma conexao websocket para enviar a mensagem para o backend
+const backend = new WebSocket("ws://localhost:3333");
+backend.on("open", function () {
+  this.send("O backend, PASSA TUDO");
+  this.on("message", async (e) => {
+    const menssagem = e.toString();
+    const objeto = JSON.parse(menssagem);
+    const sql = `INSERT INTO tabela (
+      messagem,data,latitude,longitude)
+      values(?, ?, ?, ?)`;
+    await new Promise((resolve, reject) => {
+      banconuvem.run(
+        sql,
+        [objeto.menssagem, objeto.horario, objeto.latitude, objeto.longitude],
+        (erro) => {
+          if (erro) reject(erro);
+          else resolve();
+        }
+      );
+    });
   });
 });
 
